@@ -1,0 +1,33 @@
+{"level":"info","message":"Connected to RabbitMQ"}
+{"level":"info","message":"Notification Gateway is running on port 3000"}
+{"level":"info","message":"Connected to RabbitMQ"}
+{"level":"info","message":"Notification Gateway is running on port 3000"}
+{"level":"error","message":"Error processing notification: SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","stack":"Error: SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string\n    at D:\\JS\\servise\\node_modules\\pg-pool\\index.js:45:11\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async saveNotificationToDB (D:\\JS\\servise\\index.js:42:18)\n    at async D:\\JS\\servise\\index.js:73:28"}
+{"level":"error","message":"Error processing notification: SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","stack":"Error: SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string\n    at D:\\JS\\servise\\node_modules\\pg-pool\\index.js:45:11\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async saveNotificationToDB (D:\\JS\\servise\\index.js:42:18)\n    at async D:\\JS\\servise\\index.js:73:28"}
+{"level":"error","message":"Error processing notification: SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","stack":"Error: SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string\n    at D:\\JS\\servise\\node_modules\\pg-pool\\index.js:45:11\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async saveNotificationToDB (D:\\JS\\servise\\index.js:42:18)\n    at async D:\\JS\\servise\\index.js:73:28"}
+{"level":"info","message":"Connected to RabbitMQ"}
+{"level":"info","message":"Notification Gateway is running on port 3000"}
+{"code":"ERR_SOCKET_BAD_PORT","level":"error","message":"Error processing notification: Port should be >= 0 and < 65536. Received type number (NaN).","stack":"RangeError [ERR_SOCKET_BAD_PORT]: Port should be >= 0 and < 65536. Received type number (NaN).\n    at lookupAndConnect (node:net:1298:5)\n    at Socket.connect (node:net:1255:5)\n    at Connection.connect (D:\\JS\\servise\\node_modules\\pg\\lib\\connection.js:43:17)\n    at Client._connect (D:\\JS\\servise\\node_modules\\pg\\lib\\client.js:112:11)\n    at Client.connect (D:\\JS\\servise\\node_modules\\pg\\lib\\client.js:161:12)\n    at BoundPool.newClient (D:\\JS\\servise\\node_modules\\pg-pool\\index.js:237:12)\n    at BoundPool.connect (D:\\JS\\servise\\node_modules\\pg-pool\\index.js:212:10)\n    at saveNotificationToDB (D:\\JS\\servise\\index.js:42:29)\n    at D:\\JS\\servise\\index.js:73:34\n    at Layer.handle [as handle_request] (D:\\JS\\servise\\node_modules\\express\\lib\\router\\layer.js:95:5)"}
+{"level":"info","message":"Connected to RabbitMQ"}
+{"level":"info","message":"Notification Gateway is running on port 3000"}
+{"code":"ERR_SOCKET_BAD_PORT","level":"error","message":"Error processing notification: Port should be >= 0 and < 65536. Received type number (NaN).","stack":"RangeError [ERR_SOCKET_BAD_PORT]: Port should be >= 0 and < 65536. Received type number (NaN).\n    at lookupAndConnect (node:net:1298:5)\n    at Socket.connect (node:net:1255:5)\n    at Connection.connect (D:\\JS\\servise\\node_modules\\pg\\lib\\connection.js:43:17)\n    at Client._connect (D:\\JS\\servise\\node_modules\\pg\\lib\\client.js:112:11)\n    at Client.connect (D:\\JS\\servise\\node_modules\\pg\\lib\\client.js:161:12)\n    at BoundPool.newClient (D:\\JS\\servise\\node_modules\\pg-pool\\index.js:237:12)\n    at BoundPool.connect (D:\\JS\\servise\\node_modules\\pg-pool\\index.js:212:10)\n    at saveNotificationToDB (D:\\JS\\servise\\index.js:42:29)\n    at D:\\JS\\servise\\index.js:73:34\n    at Layer.handle [as handle_request] (D:\\JS\\servise\\node_modules\\express\\lib\\router\\layer.js:95:5)"}
+{"level":"info","message":"Connected to RabbitMQ"}
+{"level":"info","message":"Notification Gateway is running on port 3000"}
+{"level":"error","message":"Error processing notification: SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","stack":"Error: SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string\n    at D:\\JS\\servise\\node_modules\\pg-pool\\index.js:45:11\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async saveNotificationToDB (D:\\JS\\servise\\index.js:42:18)\n    at async D:\\JS\\servise\\index.js:73:28"}
+{"level":"info","message":"Connected to RabbitMQ"}
+{"level":"info","message":"Notification Gateway is running on port 3000"}
+{"level":"info","message":"Notification queued: {\"type\":\"email\",\"recipient\":\"warmail222@mail.ru\",\"message\":\"Hello, this is a test notification.\"}"}
+{"level":"info","message":"Notification queued: {\"type\":\"sms\",\"recipient\":\"+123456789\",\"message\":\"Test SMS notification\"}"}
+{"level":"info","message":"Notification queued: {\"type\":\"sms\",\"recipient\":\"+123456789\",\"message\":\"Test SMS notification\"}"}
+{"level":"info","message":"Notification queued: {\"type\":\"push\",\"recipient\":\"eK6QJxK2TcC7lK7eJ8vPbU:APA91bGRmXYZ...\",\"message\":\"Hello from the Notification Gateway!\"}"}
+{"level":"info","message":"Notification queued: {\"type\":\"email\",\"recipient\":\"user@example.com\",\"message\":\"Hello, this is a test notification.\",\"attachments\":[{\"filename\":\"example.jpg\",\"path\":\"https://example.com/example.jpg\"}],\"media\":\"https://example.com/image.jpg\"}"}
+{"level":"info","message":"Connected to RabbitMQ"}
+{"level":"info","message":"Notification Gateway is running on port 3000"}
+{"level":"info","message":"Connected to RabbitMQ"}
+{"level":"info","message":"Notification Gateway is running on port 3000"}
+{"level":"info","message":"Notification queued: {\"type\":\"email\",\"recipient\":\"warmail222@mail.ru\",\"message\":\"Hello, this is a test notification.\"}"}
+{"level":"info","message":"Notification queued: {\"type\":\"email\",\"recipient\":\"warmail222@mail.ru\",\"message\":\"Hello, this is a test notification.\"}"}
+{"level":"info","message":"Notification queued: {\"type\":\"email\",\"recipient\":\"war123123mail222@mail.ru\",\"message\":\"Hello, this is a test notification.\"}"}
+{"level":"info","message":"Connected to RabbitMQ"}
+{"level":"info","message":"Connected to RabbitMQ"}
+{"level":"info","message":"Notification Gateway is running on port 3000"}
