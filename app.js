@@ -113,7 +113,6 @@ app.post("/sms", async (req, res) => {
 // Обработчики для очередей
 async function consumeMessages() {
   try {
-    confirm.log("Ну хоть что-то напиши блять");
     // Email notifications
     channel.consume("email_notifications", async (msg) => {
       console.log("Received Email message:", msg.content.toString());
