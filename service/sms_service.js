@@ -5,7 +5,7 @@ const { Pool } = require("pg");
 class SMSService {
   constructor() {
     this.RABBITMQ_URL = process.env.RABBITMQ_URL || "amqp://localhost";
-    this.QUEUE_NAME = "sms";
+    this.QUEUE_NAME = "sms_notifications";
     this.DB_CONFIG = {
       user: process.env.DB_USER || "postgres",
       host: process.env.DB_HOST || "localhost",
@@ -46,43 +46,6 @@ class SMSService {
       throw err;
     } finally {
       client.release();
-    }
-  }
-
-  async connectRabbitMQ() {
-    try {
-      const connection = await amqp.connect(this.RABBITMQ_URL);
-      const channel = await connection.createChannel();
-      await channel.assertQueue(this.QUEUE_NAME, { durable: true });
-      this.logger.info(
-        `Connected to RabbitMQ, listening to queue: ${this.QUEUE_NAME}`
-      );
-
-      channel.consume(this.QUEUE_NAME, async (msg) => {
-        if (msg) {
-          const notification = JSON.parse(msg.content.toString());
-          this.logger.info(
-            `Received SMS notification: ${JSON.stringify(notification)}`
-          );
-
-          try {
-            await this.updateNotificationStatus(notification.id, "pending");
-            await this.sendSMS(notification);
-            await this.updateNotificationStatus(notification.id, "sent");
-            channel.ack(msg);
-          } catch (err) {
-            this.logger.error(`Failed to process notification: ${err.message}`);
-            if (msg.fields.redelivered) {
-              channel.nack(msg, false, false);
-            } else {
-              channel.nack(msg, false, true);
-            }
-          }
-        }
-      });
-    } catch (err) {
-      this.logger.error("Failed to connect to RabbitMQ:", err);
-      throw err;
     }
   }
 
@@ -131,13 +94,48 @@ class SMSService {
     }
 
     this.logger.info(`Sending SMS to ${recipient}: ${message}`);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000)); // Симуляция отправки
     this.logger.info("SMS sent successfully.");
+  }
+
+  async initializeRabbitMQ() {
+    try {
+      const connection = await amqp.connect(this.RABBITMQ_URL);
+      const channel = await connection.createChannel();
+      await channel.assertQueue(this.QUEUE_NAME, { durable: true });
+
+      channel.consume(this.QUEUE_NAME, async (msg) => {
+        if (msg) {
+          const notification = JSON.parse(msg.content.toString());
+          this.logger.info(
+            `Received SMS notification: ${msg.content.toString()}`
+          );
+
+          try {
+            await this.sendSMS(notification);
+            await this.updateNotificationStatus(notification.id, "sent");
+            channel.ack(msg); // Подтверждаем обработку сообщения
+          } catch (error) {
+            this.logger.error(
+              `Error processing SMS notification: ${error.message}`
+            );
+            // ack не вызывается, сообщение останется в очереди
+          }
+        }
+      });
+
+      this.logger.info(
+        "RabbitMQ consumer is running and listening for SMS notifications..."
+      );
+    } catch (err) {
+      this.logger.error(`Error initializing RabbitMQ: ${err.message}`);
+      throw err;
+    }
   }
 
   async initialize() {
     await this.initializeDatabase();
-    await this.connectRabbitMQ();
+    await this.initializeRabbitMQ();
     this.logger.info("SMS Service is running");
   }
 }

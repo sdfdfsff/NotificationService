@@ -6,7 +6,7 @@ const { Pool } = require("pg");
 class EmailService {
   constructor() {
     this.RABBITMQ_URL = process.env.RABBITMQ_URL || "amqp://localhost";
-    this.QUEUE_NAME = "email";
+    this.QUEUE_NAME = "email_notifications";
     this.EMAIL_SERVICE_CONFIG = {
       host: process.env.EMAIL_HOST || "smtp.yandex.ru",
       port: process.env.EMAIL_PORT || 587,
@@ -41,8 +41,8 @@ class EmailService {
   async initializeDatabase() {
     const client = await this.pool.connect();
     try {
-      await client.query(`
-        CREATE TABLE IF NOT EXISTS notifications (
+      await client.query(
+        `CREATE TABLE IF NOT EXISTS notifications (
           id SERIAL PRIMARY KEY,
           type VARCHAR(50) NOT NULL,
           recipient VARCHAR(255) NOT NULL,
@@ -50,51 +50,14 @@ class EmailService {
           status VARCHAR(50) NOT NULL DEFAULT 'pending',
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
           updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        );
-      `);
+        );`
+      );
       this.logger.info("Database initialized successfully.");
     } catch (err) {
       this.logger.error("Error initializing database:", err);
       throw err;
     } finally {
       client.release();
-    }
-  }
-
-  async connectRabbitMQ() {
-    try {
-      const connection = await amqp.connect(this.RABBITMQ_URL);
-      const channel = await connection.createChannel();
-      await channel.assertQueue(this.QUEUE_NAME, { durable: true });
-      this.logger.info(
-        `Connected to RabbitMQ, listening to queue: ${this.QUEUE_NAME}`
-      );
-
-      channel.consume(this.QUEUE_NAME, async (msg) => {
-        if (msg) {
-          const notification = JSON.parse(msg.content.toString());
-          this.logger.info(
-            `Received notification: ${JSON.stringify(notification)}`
-          );
-
-          try {
-            await this.updateNotificationStatus(notification.id, "pending");
-            await this.sendEmail(notification);
-            await this.updateNotificationStatus(notification.id, "sent");
-            channel.ack(msg);
-          } catch (err) {
-            this.logger.error(`Failed to process notification: ${err.message}`);
-            if (msg.fields.redelivered) {
-              channel.nack(msg, false, false);
-            } else {
-              channel.nack(msg, false, true);
-            }
-          }
-        }
-      });
-    } catch (err) {
-      this.logger.error("Failed to connect to RabbitMQ:", err);
-      throw err;
     }
   }
 
@@ -154,9 +117,36 @@ class EmailService {
     }
   }
 
+  async initializeRabbitMQ() {
+    try {
+      const connection = await amqp.connect(this.RABBITMQ_URL);
+      this.channel = await connection.createChannel();
+      await this.channel.assertQueue(this.QUEUE_NAME, { durable: true });
+
+      this.channel.consume(this.QUEUE_NAME, async (msg) => {
+        if (msg) {
+          const notification = JSON.parse(msg.content.toString());
+          this.logger.info(`Received message: ${msg.content.toString()}`);
+          try {
+            await this.sendEmail(notification);
+            await this.updateNotificationStatus(notification.id, "sent");
+            this.channel.ack(msg);
+          } catch (error) {
+            this.logger.error("Failed to process email notification:", error);
+          }
+        }
+      });
+
+      this.logger.info("RabbitMQ consumer initialized.");
+    } catch (err) {
+      this.logger.error("Error initializing RabbitMQ:", err);
+      throw err;
+    }
+  }
+
   async initialize() {
     await this.initializeDatabase();
-    await this.connectRabbitMQ();
+    await this.initializeRabbitMQ();
     this.logger.info("Email Service is running");
   }
 }
